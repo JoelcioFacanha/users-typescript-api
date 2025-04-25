@@ -6,7 +6,7 @@ import { IUser, User } from "../../models/user.model";
 
 export class UpdateUserRepository implements IUpdateUserRepository {
   async updateUser(id: string, params: IUpdateUserParams): Promise<IUser> {
-    const upUser = await User.findByIdAndUpdate(id, params);
+    const upUser = await User.findByIdAndUpdate(id, params, { new: true });
 
     if (!upUser) throw new Error("User not updated");
 
