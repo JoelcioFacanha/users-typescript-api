@@ -1,3 +1,4 @@
+import { OK } from "../helpers";
 import { IController } from "../protocols";
 import { IGetUsersRepository } from "./protocols";
 
@@ -6,8 +7,7 @@ export class GetUsersController implements IController {
   async handle() {
     try {
       const users = await this.getUserRepository.getUsers();
-      const response = { statusCode: 200, data: users };
-      return response;
+      return OK(users);
     } catch {
       return { statusCode: 500, data: "Erro Interno do Servidor" };
     }

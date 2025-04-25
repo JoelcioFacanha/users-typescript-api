@@ -1,4 +1,5 @@
 import { IUser } from "../../models/user.model";
+import { BadRequest, InternalServerError, OK } from "../helpers";
 import { IController, IHttpRequest, IHttpResponse } from "../protocols";
 import { IUpdateUserParams, IUpdateUserRepository } from "./protocols";
 
@@ -11,9 +12,9 @@ export class UpdateUserController implements IController {
       const id = req.params.id;
       const body = req.body;
 
-      if (!body) return { statusCode: 400, data: "Missing fields" };
+      if (!body) return BadRequest("Missing fields");
 
-      if (!id) return { statusCode: 400, data: "Missing user id" };
+      if (!id) return BadRequest("Missing user id");
 
       const allowedFieldsToUpdate: (keyof IUpdateUserParams)[] = [
         "firstName",
@@ -26,13 +27,13 @@ export class UpdateUserController implements IController {
       );
 
       if (someFieldIsNotAllowedToUpdate)
-        return { statusCode: 400, data: "Some received field is not allowed" };
+        return BadRequest("Some received field is not allowed");
 
       const user = await this.updateUserRepository.updateUser(id, body);
 
-      return { statusCode: 200, data: user };
+      return OK(user);
     } catch (error) {
-      return { statusCode: 500, data: "Something went wrong" };
+      return InternalServerError("Something went wrong");
     }
   }
 }
