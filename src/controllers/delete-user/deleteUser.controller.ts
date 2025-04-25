@@ -1,8 +1,8 @@
 import { IUser } from "../../models/user.model";
-import { IHttpRequest, IHttpResponse } from "../protocols";
-import { IDeleteUserController, IDeleteUserRepository } from "./protocols";
+import { IController, IHttpRequest, IHttpResponse } from "../protocols";
+import { IDeleteUserRepository } from "./protocols";
 
-export class DeleteUserController implements IDeleteUserController {
+export class DeleteUserController implements IController {
   constructor(private readonly deleteUserRepository: IDeleteUserRepository) {}
   async handle(req: IHttpRequest<any>): Promise<IHttpResponse<IUser>> {
     try {
