@@ -1,5 +1,12 @@
+export enum HttpStatusCode {
+  OK = 200,
+  BAD_REQUEST = 400,
+  CREATED = 201,
+  SERVER_ERROR = 500,
+}
+
 export interface IHttpResponse<T> {
-  statusCode: number;
+  statusCode: HttpStatusCode;
   data: T | string;
 }
 
