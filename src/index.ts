@@ -1,7 +1,10 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { GetUsersMongodbRepository } from "./repositories/getUsersMongodb.repository";
+import { connectMongoDB } from "./database/mongodb";
+import { GetUsersMongodbRepository } from "./repositories/get-users/getUsers.repository";
 import { GetUsersController } from "./controllers/get-users/getUsers.controller";
+import { CreateUserRepository } from "./repositories/create-user/createUser.repository";
+import { CreateUserController } from "./controllers/create-user/createUser.controller";
 
 dotenv.config();
 
@@ -10,10 +13,25 @@ app.use(express.json());
 
 const port = process.env.PORT || 3000;
 
+connectMongoDB();
+
 app.get("/users", async (req: Request, res: Response) => {
   const getUsersMongodbRepository = new GetUsersMongodbRepository();
   const getUsersController = new GetUsersController(getUsersMongodbRepository);
   const { statusCode, data } = await getUsersController.handle();
+
+  res.status(statusCode).send(data);
+});
+
+app.post("/users", async (req: Request, res: Response) => {
+  const createUserMongodbRepository = new CreateUserRepository();
+  const createUsersController = new CreateUserController(
+    createUserMongodbRepository
+  );
+
+  const { statusCode, data } = await createUsersController.handle({
+    body: req.body,
+  });
 
   res.status(statusCode).send(data);
 });
