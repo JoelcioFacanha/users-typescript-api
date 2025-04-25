@@ -7,6 +7,8 @@ import { CreateUserRepository } from "./repositories/create-user/createUser.repo
 import { CreateUserController } from "./controllers/create-user/createUser.controller";
 import { UpdateUserRepository } from "./repositories/update-user/updateUser.repository";
 import { UpdateUserController } from "./controllers/update-user/updateUser.controller";
+import { DeleteUserRepository } from "./repositories/delete-user/deleteUser.repository";
+import { DeleteUserController } from "./controllers/delete-user/deleteUser.controller";
 
 dotenv.config();
 
@@ -43,6 +45,18 @@ app.patch("/users/:id", async (req: Request, res: Response) => {
   const updateUserController = new UpdateUserController(updateUserRepository);
 
   const { statusCode, data } = await updateUserController.handle({
+    params: req.params,
+    body: req.body,
+  });
+
+  res.status(statusCode).send(data);
+});
+
+app.delete("/users/:id", async (req: Request, res: Response) => {
+  const deleteUserRepository = new DeleteUserRepository();
+  const deleteUserController = new DeleteUserController(deleteUserRepository);
+
+  const { statusCode, data } = await deleteUserController.handle({
     params: req.params,
     body: req.body,
   });
