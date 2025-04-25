@@ -1,3 +1,4 @@
+import validator from "validator";
 import { IUser } from "../../models/user.model";
 import { IHttpRequest, IHttpResponse } from "../protocols";
 import {
@@ -15,6 +16,18 @@ export class CreateUserController implements ICreateUserController {
       if (!req.body) {
         return { statusCode: 400, data: "Please specify body" };
       }
+
+      const requiredFields = ["firstName", "lastName", "email", "password"];
+
+      for (const field of requiredFields) {
+        if (!req?.body?.[field as keyof ICreateUserParams]?.length) {
+          return { statusCode: 400, data: `Field ${field} is required!` };
+        }
+      }
+
+      const emailIsValid = validator.isEmail(req.body.email);
+
+      if (!emailIsValid) return { statusCode: 400, data: "E-mail is invalid!" };
 
       const body: ICreateUserParams = req.body;
 
